@@ -16,3 +16,6 @@ terraform.rc
 # Local env
 .env
 .DS_Store
+
+# Local planning
+TODO.md
