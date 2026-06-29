@@ -19,18 +19,55 @@ The repository is now the canonical single repo for the project. Splitting docs 
 - `infra/modules/vpc` models the VPC, public/private/database subnet layout, NAT path, and network ACLs.
 - `infra/modules/eks` and `infra/modules/irsa` are retained as AWS-compatible building blocks, but local workload behavior should be validated on Kind.
 
-## Local Infra Loop
+## Prerequisites
 
-Start LocalStack, then run Terraform from `infra`:
+Required for the current local infrastructure loop:
+
+- Docker with Compose v2
+- GNU Make
+- Terraform 1.x
+
+Required once the Kubernetes/GitOps milestone starts:
+
+- Kind
+- kubectl
+- Helm
+
+Optional for the observability milestone:
+
+- Grafana Cloud credentials for metrics and traces export
+
+## Quick Start
+
+Start LocalStack and Postgres:
 
 ```bash
-cd infra
-terraform init
-terraform fmt -recursive
-terraform plan
+make local-up
+```
+
+Initialize and validate Terraform:
+
+```bash
+make terraform-init
+make terraform-validate
+```
+
+Plan the LocalStack-backed infrastructure:
+
+```bash
+make terraform-plan
 ```
 
 The default provider points to `http://localhost:4566`, so these commands should not hit real AWS.
+
+## Local Infra Loop
+
+- `make local-up` starts LocalStack and local Postgres.
+- `make local-down` stops the local services.
+- `make terraform-fmt` formats Terraform files.
+- `make terraform-plan` plans against LocalStack.
+- `make terraform-apply` applies against LocalStack.
+- `make terraform-destroy` removes LocalStack-managed resources.
 
 ## Project Goal
 

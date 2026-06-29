@@ -1,0 +1,41 @@
+services:
+  localstack:
+    image: localstack/localstack:4.5.0
+    container_name: payrail-localstack
+    environment:
+      AWS_DEFAULT_REGION: us-east-1
+      DEBUG: "0"
+      PERSISTENCE: "1"
+      SERVICES: ec2,eks,iam,rds,s3,secretsmanager,sts,dynamodb
+    ports:
+      - "4566:4566"
+    volumes:
+      - localstack-data:/var/lib/localstack
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:4566/_localstack/health >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  postgres:
+    image: postgres:16.4-alpine
+    container_name: payrail-postgres
+    environment:
+      POSTGRES_DB: payrail
+      POSTGRES_PASSWORD: payrail
+      POSTGRES_USER: payrail
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U payrail -d payrail"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+volumes:
+  localstack-data:
+  postgres-data:

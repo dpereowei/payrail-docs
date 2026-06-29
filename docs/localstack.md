@@ -4,16 +4,30 @@ PayRail defaults to LocalStack for Terraform so routine infrastructure work does
 
 ## Prerequisites
 
-- Docker
-- Terraform
-- LocalStack running on `http://localhost:4566`
+- Docker with Compose v2
+- GNU Make
+- Terraform 1.x
 
 ## Run Terraform Locally
 
+Start the local dependencies:
+
 ```bash
-cd infra
-terraform init
-terraform plan
+make local-up
+```
+
+Initialize and validate Terraform:
+
+```bash
+make terraform-init
+make terraform-validate
+```
+
+Plan or apply against LocalStack:
+
+```bash
+make terraform-plan
+make terraform-apply
 ```
 
 The default AWS provider in `provider.tf` uses dummy credentials and LocalStack endpoints. It should not contact real AWS.
